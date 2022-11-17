@@ -2,8 +2,7 @@ const router = require("express").Router();
 
 const ApiMarket = require("../models/ApiMarket");
 
-//create
-router.post("/", async (req, res) => {
+router.post("/create", async (req, res) => {
     const {title,
         description,
         price,

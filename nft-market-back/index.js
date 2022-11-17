@@ -1,11 +1,11 @@
 // initial configuration
 require("dotenv").config();
+const cors = require('cors')
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
 
-//way to read json
-//middleware
+app.use(cors())
 app.use(
     express.urlencoded({ extended: true })
 );

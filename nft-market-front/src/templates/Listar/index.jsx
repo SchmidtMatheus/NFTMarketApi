@@ -42,9 +42,12 @@ export const Listar = () => {
         setSearchValue(Input);
     };
     const noMorePosts = page + postsPerPage >= allPosts.length;
-    const filteredPosts = searchValue ? allPosts.filter((post) => {
-        return post.title.toLowerCase().includes(searchValue.toLowerCase());
-    }) : posts;
+    // const filteredPosts = searchValue ? allPosts.filter((post) => {
+    //     return post.title.toLowerCase().includes(searchValue.toLowerCase());
+    // }) : posts;
+    const filteredPosts = posts
+    console.log(filteredPosts)
+    console.log("filteredPosts")
     return (
         <Styled.Container>
             <TextInputSearch searchValue={Input} handleChange={handleChange} onClick={btnClick} />

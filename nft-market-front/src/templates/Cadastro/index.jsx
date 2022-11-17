@@ -11,7 +11,9 @@ export const Cadastro = () => {
     const navigate = useNavigate();
     const register = async (nft) => {
         let msgType = "success";
-        const data = await api.post("/nft/create", nft, { headers: { 'Authorization': `Bearer ${JSON.parse(token)}` } })
+        const data = await api.post("/nftmarket/create", nft
+            // , { headers: { 'Authorization': `Bearer ${JSON.parse(token)}` } }
+        )
             .then((response) => {
                 return response.data;
             })

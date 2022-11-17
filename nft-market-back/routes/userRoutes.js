@@ -4,11 +4,11 @@ const nftUserRoutes = require("../models/User");
 
 router.post("/register", async (req, res) => {
     console.log("saefsadf")
-    const { name, 
-            lastname, 
-            email, 
-            user, 
-            password } = req.body;
+    const { name,
+        lastname,
+        email,
+        user,
+        password } = req.body;
 
     if(!name){
         res.status(422).json({ error: "Name Required!"});
@@ -20,15 +20,12 @@ router.post("/register", async (req, res) => {
     };
     if(!email){
         res.status(422).json({ error: "Email Required!"});
-        return;    
+        return;
     };
-    if(!user){
-        res.status(422).json({ error: "User Required!"});
-        return;    
-    };
+
     if(!password){
         res.status(422).json({ error: "Password Required!"});
-        return;    
+        return;
     };
 
     const objUser = {
@@ -52,6 +49,26 @@ router.post("/register", async (req, res) => {
         res.status(500).json({ error: error });
     };
 });
+// router.post("/login", async (req, res) => {
+//     const { email,
+//         password } = req.body;
+//
+//     const objUser = {
+//         email,
+//         password,
+//     };
+//     try {
+//         const finded = await nftUserRoutes.find(objUser);
+//         if
+//         console.log("saefsadf")
+//
+//         res.status(201).json({ message: "Registered user!"});
+//         console.log("saefsadf")
+//     } catch (error) {
+//         console.log(error)
+//         res.status(500).json({ error: error });
+//     };
+// });
 
 router.get("/", async (req, res) => {
     try {

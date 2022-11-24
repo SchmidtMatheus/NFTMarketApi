@@ -2,58 +2,69 @@ const router = require("express").Router();
 
 const ApiMarket = require("../models/ApiMarket");
 
-//create
-router.post("/", async (req, res) => {
+router.post("/create", async (req, res) => {
     const {title,
         description,
         price,
         imageUrl,
-        sale} = req.body;
+        userId} = req.body;
 
-        if(!title){
-            res.status(422).json({ error: "Title Required!"});
-            return;
-        };
-        if(!description){
-            res.status(422).json({ error: "Description Required!"});
-            return;
-        };
-        if(!price){
-            res.status(422).json({ error: "Price Required!"});
-            return;
-        };
-        if(!imageUrl){
-            res.status(422).json({ error: "ImageUrl Required!"});
-            return;
-        };
-        if(sale === null){
-            res.status(422).json({ error: "Sale Required!"});
-            return;
-        };
+    if(!title){
+        res.status(422).json({ error: "Title Required!"});
+        return;
+    };
+    if(!description){
+        res.status(422).json({ error: "Description Required!"});
+        return;
+    };
+    if(!price){
+        res.status(422).json({ error: "Price Required!"});
+        return;
+    };
+    if(!imageUrl){
+        res.status(422).json({ error: "ImageUrl Required!"});
+        return;
+    };
 
-        const apiMarket = {
-            title,
-            description,
-            price,
-            imageUrl,
-            sale,
-        };
+    const apiMarket = {
+        title,
+        description,
+        price,
+        imageUrl,
+        sale: true,
+        userId
+    };
 
-        try {
-            await ApiMarket.create(apiMarket);
+    try {
+        await ApiMarket.create(apiMarket);
 
-            res.status(201).json({ message: "NFT Registered!"});
-        } catch (error) {
-            res.status(500).json({ error: error });
-        };
+        res.status(201).json({ message: "NFT Registered!"});
+    } catch (error) {
+        res.status(500).json({ error: error });
+    };
+});
+
+router.post("/comprar", async (req, res) => {
+    const {_id,
+        userId} = req.body;
+    let nft = await ApiMarket.find().where('_id').equals(_id)
+    nft.userId = userId;
+    nft.sale = false;
+    try {
+        await nft.save();
+        res.status(201).json({ message: "NFT Registered!"});
+    } catch (error) {
+        res.status(500).json({ error: error });
+    };
 });
 
 //read
 
 //findAll
-router.get("/", async (req, res) => {
+router.get("/:userId", async (req, res) => {
+    const userId = req.params.userId;
     try {
-        const apiMarkets = await ApiMarket.find();
+        const apiMarkets = await ApiMarket.find().where('userId').ne(userId);
 
         res.status(200).json({ apiMarkets });
     } catch (error) {

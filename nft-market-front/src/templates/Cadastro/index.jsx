@@ -7,11 +7,15 @@ import { NftForm } from '../../components/NftForm';
 
 export const Cadastro = () => {
     const [token] = useState(localStorage.getItem('token') || '');
+    const [user] = useState(localStorage.getItem('user') || '');
     const { setFlashMessage } = useFlashMessage();
     const navigate = useNavigate();
     const register = async (nft) => {
+        nft.userId = JSON.parse(user)._id;
         let msgType = "success";
-        const data = await api.post("/nft/create", nft, { headers: { 'Authorization': `Bearer ${JSON.parse(token)}` } })
+        const data = await api.post("/nftmarket/create", nft
+            , { headers: { 'Authorization': `Bearer ${JSON.parse(token)}` } }
+        )
             .then((response) => {
                 return response.data;
             })

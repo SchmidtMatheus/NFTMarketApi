@@ -1,8 +1,10 @@
 import { api } from "./api";
 
 export const loadPosts = async () => {
-  const postsResponse = await api.get('/nft');
-  const postsJson = await postsResponse.data.nfts;
+  const user = localStorage.getItem('user')
+  const userId = JSON.parse(user)._id;
+  const postsResponse = await api.get('/nftmarket/' + userId);
+  const postsJson = await postsResponse.data.apiMarkets;
   const posts = postsJson.filter((post) => {
     return post.sale;
   });

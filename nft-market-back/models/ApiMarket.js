@@ -6,6 +6,7 @@ const ApiMarket = mongoose.model("ApiMarket", {
     price: Number,
     imageUrl: String,
     sale: Boolean,
+    userId: String
 });
 
 module.exports = ApiMarket;

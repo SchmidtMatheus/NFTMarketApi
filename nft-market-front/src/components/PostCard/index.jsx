@@ -1,6 +1,7 @@
 import * as Styled from './styles';
 
-export const PostCard = ({ cover, title, body, price }) => {
+export const PostCard = ({ cover, title, body, price}) => {
+
   return (
     <Styled.Container>
       <img src={cover} alt={title} />

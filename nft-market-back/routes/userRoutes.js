@@ -1,9 +1,14 @@
 const router = require("express").Router();
 
 const nftUserRoutes = require("../models/User");
+const path = require("path");
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const e = require("express");
+require('dotenv').config();
 
 router.post("/register", async (req, res) => {
-    console.log("saefsadf")
+    
     const { name,
         lastname,
         email,
@@ -36,39 +41,48 @@ router.post("/register", async (req, res) => {
         password,
     };
 
-    console.log("saefsadf")
+    
     try {
-        console.log("saefsadf")
+        
         await nftUserRoutes.create(objUser);
-        console.log("saefsadf")
+        
 
         res.status(201).json({ message: "Registered user!"});
-        console.log("saefsadf")
+        
     } catch (error) {
         console.log(error)
         res.status(500).json({ error: error });
     };
 });
-// router.post("/login", async (req, res) => {
-//     const { email,
-//         password } = req.body;
-//
-//     const objUser = {
-//         email,
-//         password,
-//     };
-//     try {
-//         const finded = await nftUserRoutes.find(objUser);
-//         if
-//         console.log("saefsadf")
-//
-//         res.status(201).json({ message: "Registered user!"});
-//         console.log("saefsadf")
-//     } catch (error) {
-//         console.log(error)
-//         res.status(500).json({ error: error });
-//     };
-// });
+
+router.post("/login", async (req, res) => {
+    const { email, password } = req.body;
+    if (!email || !password) return res.status(400).json({ 'message': 'Username and password are required.' });
+    const find =  await nftUserRoutes.find().where('email').equals(email).limit(1);
+    console.log(find)
+    const foundUser = find[0];
+    if (!foundUser) return res.sendStatus(401); //Unauthorized
+    const match = password === foundUser.password;
+    if (match) {
+        const token = jwt.sign(
+            { "username": foundUser.user },
+            'process.env.ACCESS_TOKEN_SECRET',
+            { expiresIn: '1d' }
+        );
+        const refreshToken = jwt.sign(
+            { "username": foundUser.user },
+            'process.env.REFRESH_TOKEN_SECRET',
+            { expiresIn: '1d' }
+        );
+        foundUser.refreshToken = refreshToken;
+        foundUser.save();
+
+        res.cookie('jwt', refreshToken, { httpOnly: true, sameSite: 'None', secure: true, maxAge: 24 * 60 * 60 * 1000 });
+        res.json({ foundUser, token });
+    } else {
+        res.sendStatus(401);
+    }
+});
 
 router.get("/", async (req, res) => {
     try {

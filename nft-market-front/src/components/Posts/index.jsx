@@ -2,7 +2,7 @@ import * as Styled from './styles';
 
 import { PostCard } from '../PostCard';
 
-export const Posts = ({ posts = [] }) => {
+export const Posts = ({ onClick, posts = [] }) => {
   return (
     <Styled.Container>
       {posts.map((post) => (
@@ -14,6 +14,7 @@ export const Posts = ({ posts = [] }) => {
           }
           price={post.price.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})}
           cover={post.imageUrl}
+          onClick = {onClick(post)}
         />
       ))}
     </Styled.Container>

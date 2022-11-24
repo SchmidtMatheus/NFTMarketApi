@@ -5,6 +5,7 @@ import { Button } from '../../components/Button';
 import { loadPosts } from '../../utils/loadPosts';
 import { Posts } from '../../components/Posts';
 import useFlashMessage from '../../hooks/useFlashMessage';
+import {api} from "../../utils/api";
 
 export const Listar = () => {
     const [posts, setPosts] = useState([]);
@@ -41,17 +42,33 @@ export const Listar = () => {
         }
         setSearchValue(Input);
     };
+    const comprar = async (nft) => {
+        const token = localStorage.getItem('token')
+        const user = localStorage.getItem('user')
+        const obj = {
+            _id: nft._id,
+            userId: JSON.parse(user)._id
+        }
+            await api.post("/nftmarket/comprar", obj
+                , { headers: { 'Authorization': `Bearer ${JSON.parse(token)}` } }
+            )
+                .then((response) => {
+                    return response.data;
+                })
+        if (Input === "") {
+            setFlashMessage('Fill in the field to search!', 'sucess');
+            return;
+        }
+        setSearchValue(Input);
+    };
     const noMorePosts = page + postsPerPage >= allPosts.length;
-    // const filteredPosts = searchValue ? allPosts.filter((post) => {
-    //     return post.title.toLowerCase().includes(searchValue.toLowerCase());
-    // }) : posts;
-    const filteredPosts = posts
-    console.log(filteredPosts)
-    console.log("filteredPosts")
+    const filteredPosts = searchValue ? allPosts.filter((post) => {
+        return post.title.toLowerCase().includes(searchValue.toLowerCase());
+    }) : posts;
     return (
         <Styled.Container>
             <TextInputSearch searchValue={Input} handleChange={handleChange} onClick={btnClick} />
-            {filteredPosts.length > 0 && <Posts posts={filteredPosts} />}
+            {filteredPosts.length > 0 && <Posts posts={filteredPosts} onClick={comprar} />}
             {filteredPosts.length === 0 && (
                 <Styled.NotFound>
                     <p>Ops, parece que não há nft por aqui</p>

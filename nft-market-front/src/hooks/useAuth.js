@@ -11,9 +11,11 @@ export default function useAuth() {
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    if (token) {
+    if (token !== 'undefined') {
       api.defaults.headers.Authorization = `Bearer ${JSON.parse(token)}`
       setAuthenticated(true);
+    } else {
+      navigate("/login");
     }
   }, []);
 
@@ -35,7 +37,7 @@ export default function useAuth() {
 
   const authUser = async (data) => {
     setAuthenticated(true);
-
+    localStorage.setItem('user', JSON.stringify(data.foundUser));
     localStorage.setItem('token', JSON.stringify(data.token));
 
     navigate("/cadastrar");

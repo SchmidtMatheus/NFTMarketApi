@@ -29,7 +29,7 @@ export const Navbar = () => {
                 ? (
                     <>
                         <li>
-                            <Link to="/cadastrar-nft">Enviar nft</Link>
+                            <Link to="/cadastrar">Enviar nft</Link>
                         </li>
                         <li onClick={logout}>
                             Sair
